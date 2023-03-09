@@ -56,6 +56,9 @@ func RenameContents(oldpath, newpath string) error {
 
 // ReadContentsByExt 读取指定目录下指定后缀的文件
 func ReadContentsByExt(path, ext string) ([]string, error) {
+	if !strings.HasPrefix(ext, ".") {
+		ext = "." + ext
+	}
 	readDir, err := os.ReadDir(path)
 	if err != nil {
 		return nil, err
@@ -65,7 +68,7 @@ func ReadContentsByExt(path, ext string) ([]string, error) {
 		if file.IsDir() {
 			continue
 		}
-		if !strings.HasSuffix(strings.ToUpper(file.Name()), strings.ToUpper(ext)) {
+		if ext != "" && !strings.HasSuffix(strings.ToUpper(file.Name()), strings.ToUpper(ext)) {
 			continue
 		}
 		files = append(files, path+PathSeparator+file.Name())
