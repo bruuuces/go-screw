@@ -86,7 +86,7 @@ func IsExist(path string) bool {
 	return true
 }
 
-func MoveFile(oldpath, newpath string) error {
+func MoveFile(oldpath, newpath string, perm os.FileMode) error {
 	err := os.Rename(oldpath, newpath)
 	if err == nil {
 		return nil
@@ -95,7 +95,8 @@ func MoveFile(oldpath, newpath string) error {
 	if err != nil {
 		return fmt.Errorf("Couldn't open source file: %s", err)
 	}
-	newfile, err := os.Create(newpath)
+	newfile, err := os.OpenFile(newpath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, perm)
+
 	if err != nil {
 		oldfile.Close()
 		return fmt.Errorf("Couldn't open dest file: %s", err)
