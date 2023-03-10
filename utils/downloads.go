@@ -14,7 +14,7 @@ import (
 func main() {
 
 }
-func DownloadFile(durl string, filepath, filename string) (*os.File, error) {
+func DownloadFile(durl string, filepath, filename string, perm os.FileMode) (*os.File, error) {
 	if filename == "" {
 		uri, err := url.ParseRequestURI(durl)
 		if err != nil {
@@ -32,7 +32,7 @@ func DownloadFile(durl string, filepath, filename string) (*os.File, error) {
 	defer raw.Close()
 	reader := bufio.NewReaderSize(raw, 1024*32)
 
-	file, err := os.Create(filepath + PathSeparator + filename)
+	file, err := os.OpenFile(filepath+PathSeparator+filename, os.O_RDWR|os.O_CREATE|os.O_TRUNC, perm)
 	if err != nil {
 		return nil, err
 	}
